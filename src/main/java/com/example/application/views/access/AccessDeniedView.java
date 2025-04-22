@@ -12,6 +12,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 public class AccessDeniedView extends VerticalLayout {
     public AccessDeniedView() {
         add(new H1("You shall not pass!"));
-        add(new Image("../../resources/META-INF/resources/access_denied.jpg", "Access Denied"));
+        Image image = new Image("access_denied.jpg", "Access Denied");
+        add(image);
     }
 }

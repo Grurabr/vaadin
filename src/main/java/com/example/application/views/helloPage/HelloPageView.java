@@ -3,15 +3,25 @@ package com.example.application.views.helloPage;
 import com.example.application.data.*;
 import com.example.application.services.OrderService;
 import com.example.application.services.UserService;
+import com.example.application.views.broadcaster.Broadcaster;
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Push;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+import com.vaadin.flow.shared.Registration;
+import com.vaadin.flow.shared.ui.Transport;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
@@ -19,6 +29,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 import java.util.Set;
+
 
 @PageTitle("Welcome")
 @Route("")
@@ -28,7 +39,20 @@ public class HelloPageView extends VerticalLayout {
     private final OrderService orderService;
     private final UserService userService;
 
+    private final VerticalLayout messages = new VerticalLayout();
+    private final TextField messageField = new TextField();
+    private final Button sendButton = new Button("Send");
+    Registration broadcasterRegistration;
+
     public HelloPageView(OrderService orderService, UserService userService) {
+
+        sendButton.addClickListener(e -> {
+            Broadcaster.broadcast(messageField.getValue());
+            messageField.clear();
+        });
+
+        HorizontalLayout sendLayout = new HorizontalLayout(messageField, sendButton);
+
         this.orderService = orderService;
         this.userService = userService;
 
@@ -77,6 +101,8 @@ public class HelloPageView extends VerticalLayout {
 
         add(new H1("Welcome, " + displayName + "!"));
 
+        add(sendLayout, messages); //push
+
         if (orders.isEmpty()) {
             add(new H4("No bookings found."));
         } else {
@@ -89,6 +115,29 @@ public class HelloPageView extends VerticalLayout {
                 add(new BookingCard(date, operations));
             }
         }
+
     }
+
+    // Listener
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        UI ui = attachEvent.getUI();
+        broadcasterRegistration = Broadcaster.register(newMessage -> {
+            if (ui.isAttached()) {
+                ui.access(() -> {
+                    messages.add(Notification.show("Your message: " + newMessage, 3000, Notification.Position.TOP_CENTER));
+                });
+            }
+        });
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        if (broadcasterRegistration != null) {
+            broadcasterRegistration.remove();
+            broadcasterRegistration = null;
+        }
+    }
+
 
 }

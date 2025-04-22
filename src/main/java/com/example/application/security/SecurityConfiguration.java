@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
@@ -19,11 +20,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfiguration extends VaadinWebSecurity {
 
 
-    private final CustomAccessDeniedHandler accessDeniedHandler;
 
-    public SecurityConfiguration(CustomAccessDeniedHandler accessDeniedHandler) {
-        this.accessDeniedHandler = accessDeniedHandler;
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -44,11 +41,18 @@ public class SecurityConfiguration extends VaadinWebSecurity {
                 .hasAuthority("ADMIN"));
 
         http.exceptionHandling(exception -> exception
-                .accessDeniedHandler(accessDeniedHandler));
+                .accessDeniedHandler(accessDeniedHandler()));
 
         super.configure(http);
         setLoginView(http, LoginView.class);
     }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
+    }
+
+
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {

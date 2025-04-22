@@ -1,0 +1,25 @@
+.booking-card {
+    background-color: var(--lumo-contrast-5pct);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--lumo-space-m);
+    border-radius: var(--lumo-border-radius-l);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.booking-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.booking-card-header {
+    font-size: var(--lumo-font-size-xl);
+    font-weight: 600;
+}
+
+.booking-card-operations {
+    font-size: var(--lumo-font-size-s);
+    color: var(--lumo-secondary-text-color);
+}
