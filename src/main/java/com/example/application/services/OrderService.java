@@ -2,6 +2,9 @@ package com.example.application.services;
 
 import com.example.application.data.Order;
 import com.example.application.data.OrderRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.expression.spel.ast.OpInc;
 import org.springframework.stereotype.Service;
 
@@ -30,5 +33,10 @@ public class OrderService {
 
     public List<Order> getAll(){
         return repository.findAll();
+    }
+
+    public List<Order> getFilteredOrders(Specification<Order> spec, int offset, int limit) {
+        Pageable pageable = PageRequest.of(offset / limit, limit);
+        return repository.findAll(spec, pageable).getContent();
     }
 }

@@ -32,11 +32,11 @@ public class CustomerService {
     }
 
     public Boolean customerNameAvailable(String name){
-        return repository.findByCustomername(name).isEmpty();
+        return repository.findByName(name).isEmpty();
     }
 
     public Optional<Customer> getByEmail(String email){
-        return repository.findByCustomerEmail(email);
+        return repository.findByEmail(email);
     }
 
 

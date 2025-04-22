@@ -9,19 +9,12 @@ import java.util.Set;
 
 @Entity
 @Table(name = "staff")
-public class Staff extends AbstractEntity{
+public class Staff extends User{
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
-    @Email
-    private String email;
-    private String phone;
-    private String occupation;
-    @Enumerated(EnumType.STRING)
-    @ElementCollection(fetch = FetchType.EAGER)
-    private Set<Role> role;
     @JsonIgnore
-    private String hashedPassword;
-
     @OneToMany(mappedBy = "staff")
     private List<Order> orders;
 
@@ -48,36 +41,9 @@ public class Staff extends AbstractEntity{
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
-    public String getEmail() {
-        return email;
+    public String getFullName(){
+        return firstName + " " + lastName;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getOccupation() {
-        return occupation;
-    }
-
-    public void setOccupation(String occupation) {
-        this.occupation = occupation;
-    }
-
-    public Set<Role> getRole() {
-        return role;
-    }
-
-    public void setRole(Set<Role> role) {
-        this.role = role;
-    }
 }

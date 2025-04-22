@@ -2,6 +2,7 @@ package com.example.application.security;
 
 import com.example.application.data.Customer;
 import com.example.application.data.CustomerRepository;
+import com.example.application.data.Staff;
 import com.example.application.data.StaffRepository;
 import com.example.application.services.CustomerService;
 import com.vaadin.flow.spring.security.AuthenticationContext;
@@ -26,9 +27,18 @@ public class AuthenticatedUser {
     }
 
     @Transactional
-    public Optional<Customer> get() {
+    public Optional<Object> get() {
         return authenticationContext.getAuthenticatedUser(UserDetails.class)
-                .flatMap(userDetails -> customerRepository.findByCustomerEmail(userDetails.getUsername()));
+                .flatMap(userDetails -> {
+                    Optional<Staff> staff = staffRepository.findByEmail(userDetails.getUsername());
+                    if (staff.isPresent()){
+                        return Optional.of(staff.get());
+                    }
+
+                    Optional<Customer> customer = customerRepository.findByEmail(userDetails.getUsername());
+                    return customer;
+
+                });
     }
 
     public void logout() {

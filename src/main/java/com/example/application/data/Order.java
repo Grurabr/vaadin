@@ -3,12 +3,13 @@ package com.example.application.data;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
-
+@Entity
+@Table(name = "orders")
 public class Order extends AbstractEntity{
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String status;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
     @ManyToOne
     @JoinColumn(name="customer_id", nullable = false)
@@ -20,9 +21,9 @@ public class Order extends AbstractEntity{
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "order_service",
+            name = "order_operation",
             joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id")
+            inverseJoinColumns = @JoinColumn(name = "operation_id", referencedColumnName = "id")
     )
     private List<Operation> operations;
 
@@ -42,35 +43,29 @@ public class Order extends AbstractEntity{
         this.staff = staff;
     }
 
-    public List<Operation> getServices() {
-        return operations;
-    }
 
-    public void setServices(List<Operation> operations) {
-        this.operations = operations;
-    }
-
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
-    public String getStatus() {
-        return status;
+
+    public List<Operation> getOperations() {
+        return operations;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setOperations(List<Operation> operations) {
+        this.operations = operations;
     }
 }

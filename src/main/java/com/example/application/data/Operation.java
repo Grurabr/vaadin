@@ -1,16 +1,17 @@
 package com.example.application.data;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 
 import java.time.Duration;
 import java.util.List;
-
+@Entity
 public class Operation extends AbstractEntity{
     private String name;
-    private float price;
-    private Duration executionTime;
+    private Double price;
 
-    @ManyToMany(mappedBy = "services")
+    @ManyToMany(mappedBy = "operations")
     private List<Order> orders;
 
     public List<Order> getOrders() {
@@ -29,19 +30,12 @@ public class Operation extends AbstractEntity{
         this.name = name;
     }
 
-    public float getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
-    public Duration getExecutionTime() {
-        return executionTime;
-    }
-
-    public void setExecutionTime(Duration executionTime) {
-        this.executionTime = executionTime;
-    }
 }
