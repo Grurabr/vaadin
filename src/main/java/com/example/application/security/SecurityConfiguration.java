@@ -37,20 +37,17 @@ public class SecurityConfiguration extends VaadinWebSecurity {
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(new AntPathRequestMatcher("/line-awesome/**/*.svg")).permitAll());
 
-        http.authorizeHttpRequests((authorize) -> authorize.requestMatchers("/edit-page")
-                .hasAuthority("ADMIN"));
 
-        http.exceptionHandling(exception -> exception
-                .accessDeniedHandler(accessDeniedHandler()));
+
+
+
+
 
         super.configure(http);
         setLoginView(http, LoginView.class);
     }
 
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler() {
-        return new CustomAccessDeniedHandler();
-    }
+
 
 
 

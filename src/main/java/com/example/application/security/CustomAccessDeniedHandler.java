@@ -1,19 +1,20 @@
 package com.example.application.security;
 
-import jakarta.servlet.http.HttpServletRequest;
+import com.example.application.views.access.AccessDeniedView;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.ErrorParameter;
+import com.vaadin.flow.router.NotFoundException;
+import com.vaadin.flow.router.RouteNotFoundError;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@Component
-public class CustomAccessDeniedHandler implements AccessDeniedHandler {
+
+public class CustomAccessDeniedHandler extends RouteNotFoundError {
 
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response,
-                       AccessDeniedException accessDeniedException) throws IOException {
-        response.sendRedirect("/access-denied");
+    public int setErrorParameter(final BeforeEnterEvent event, final ErrorParameter<NotFoundException> parameter) {
+        event.forwardTo(AccessDeniedView.class);
+        return HttpServletResponse.SC_NOT_FOUND;
     }
 }

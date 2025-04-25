@@ -1,6 +1,7 @@
 package com.example.application.views.login;
 
 import com.example.application.data.Customer;
+import com.example.application.data.Role;
 import com.example.application.services.CustomerService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -21,7 +22,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class RegisterComponent extends Div {
 
@@ -112,6 +115,10 @@ public class RegisterComponent extends Div {
             if (binder.isValid()){
                 try {
                     binder.writeBean(customer);
+
+                    Set<Role> roles = new HashSet<>();
+                    roles.add(Role.USER);
+                    customer.setRole(roles);
                     customerService.save(customer);
                     UI.getCurrent().navigate("login");
                 } catch (ValidationException ex) {

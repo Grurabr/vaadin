@@ -28,6 +28,8 @@ import jakarta.annotation.security.RolesAllowed;
 import org.springframework.data.jpa.domain.Specification;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -208,16 +210,27 @@ public class EditPage extends Div {
         });
 
         Button clear = new Button("Clear", e -> {
+            dynamicGrid.select(null);
             firstName.clear();
             lastName.clear();
             email.clear();
             phone.clear();
             roleComboBox.setValue(Collections.emptySet());
+
+            showPersonForm(new Staff());
         });
 
         Button delete = new Button("Delete", e -> {
-            staffService.delete(staff.getId());
-            loadGridData("Staff");
+            try{
+                staffService.delete(staff.getId());
+                loadGridData("Staff");
+            } catch (Exception ex){
+                Notification notification = Notification.show("Ei voi poistaa: työntekijä on mukana tilauksissa. " +
+                        "Jos haluat testata poistoa, " +
+                        "voit luoda uuden ja poistaa sen tai poistaa ensin kaikki siihen liittyvät tilaukset");
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            }
+
         });
 
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -244,14 +257,25 @@ public class EditPage extends Div {
         });
 
         Button clear = new Button("Clear", e -> {
+            dynamicGrid.select(null);
             name.clear();
             email.clear();
             phone.clear();
+
+            showCustomerForm(new Customer());
+
         });
 
         Button delete = new Button("Delete", e -> {
-            staffService.delete(customer.getId());
-            loadGridData("Customer");
+            try {
+                customerService.delete(customer.getId());
+                loadGridData("Customer");
+            } catch (Exception ex){
+                Notification notification = Notification.show("Ei voi poistaa: asiakas on mukana tilauksissa. " +
+                        "Jos haluat testata poistoa, " +
+                        "voit luoda uuden ja poistaa sen tai poistaa ensin kaikki siihen liittyvät tilaukset");
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            }
         });
 
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -274,13 +298,23 @@ public class EditPage extends Div {
         });
 
         Button clear = new Button("Clear", e -> {
+            dynamicGrid.select(null);
             name.clear();
             price.clear();
+
+            showServiceForm(new Operation());
         });
 
         Button delete = new Button("Delete", e -> {
-            operationService.delete(operation.getId());
-            loadGridData("Operation");
+            try{
+                operationService.delete(operation.getId());
+                loadGridData("Operation");
+            } catch (Exception ex){
+                Notification notification = Notification.show("Ei voi poistaa: työ on mukana tilauksissa. " +
+                        "Jos haluat testata poistoa, " +
+                        "voit luoda uuden ja poistaa sen tai poistaa ensin kaikki siihen liittyvät tilaukset");
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            }
         });
 
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -350,15 +384,19 @@ public class EditPage extends Div {
         });
 
         Button clear = new Button("Clear", e -> {
+            dynamicGrid.select(null);
             customerComboBox.clear();
             staffComboBox.clear();
             startdateTimePicker.clear();
             enddateTimePicker.clear();
             operationMultiSelect.clear();
 
+            showOrderForm(new Order());
+
         });
 
         Button delete = new Button("Delete", e -> {
+
             orderService.delete(order.getId());
             loadGridData("Order");
         });

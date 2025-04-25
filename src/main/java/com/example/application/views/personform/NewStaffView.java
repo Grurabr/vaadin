@@ -8,6 +8,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -34,6 +35,7 @@ import java.util.Objects;
 @Route("new-staff")
 @Menu(order = 1, icon = LineAwesomeIconUrl.USER)
 @RolesAllowed("ADMIN")
+@CssImport("./styles/global-styles.css")
 public class NewStaffView extends Composite<VerticalLayout> {
 
 

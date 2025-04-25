@@ -16,6 +16,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.i18n.LocaleChangeEvent;
+import com.vaadin.flow.i18n.LocaleChangeObserver;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -35,9 +37,12 @@ import java.util.Set;
 @Route("")
 @AnonymousAllowed
 @Menu(order = 0)
-public class HelloPageView extends VerticalLayout {
+public class HelloPageView extends VerticalLayout implements LocaleChangeObserver {
     private final OrderService orderService;
     private final UserService userService;
+    private H1 header =new H1();
+    private H4 text = new H4();
+    private Button login = new Button();
 
     private final VerticalLayout messages = new VerticalLayout();
     private final TextField messageField = new TextField();
@@ -63,9 +68,10 @@ public class HelloPageView extends VerticalLayout {
                 && !(auth instanceof AnonymousAuthenticationToken);
 
         if (!isAuthenticated) {
-            H1 header = new H1("Hello in first page");
-            H4 text = new H4("Login to start booking");
-            Button login = new Button("Login");
+            header.setText(getTranslation("helloh1"));
+            text.setText(getTranslation("helloMessage"));
+            login.setText(getTranslation("loginButton"));
+            login.getElement().getStyle().set("color", "red");
             login.addClickListener(e -> UI.getCurrent().navigate("login"));
             add(header, text, login);
             return;
@@ -139,5 +145,10 @@ public class HelloPageView extends VerticalLayout {
         }
     }
 
-
+    @Override
+    public void localeChange(LocaleChangeEvent event) {
+        if (header != null) header.setText(getTranslation("helloh1"));
+        if (text != null) text.setText(getTranslation("helloMessage"));
+        if (login != null) login.setText(getTranslation("loginButton"));
+    }
 }
